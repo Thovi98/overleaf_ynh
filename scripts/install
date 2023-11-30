@@ -95,41 +95,40 @@ chown $app:$app "$install_dir/settings.js"
 #=================================================
 ynh_script_progression --message="Building app..."
 
-mkdir -p "$install_dir/live"
-cp "$install_dir/build/server-ce/genScript.js" "$install_dir/live/genScript.js"
-cp "$install_dir/build/server-ce/services.js" "$install_dir/live/services.js"
-cp "$install_dir/build/package.json" "$install_dir/live/package.json"
-cp "$install_dir/build/package-lock.json" "$install_dir/live/package-lock.json"
-cp -r "$install_dir/build/libraries/" "$install_dir/live/libraries/"
-cp -r "$install_dir/build/services/" "$install_dir/live/services/"
-cp -r "$install_dir/build/patches/" "$install_dir/live/patches/"
+cp "$install_dir/build/server-ce/genScript.js" "$install_dir//genScript.js"
+cp "$install_dir/build/server-ce/services.js" "$install_dir/services.js"
+cp "$install_dir/build/package.json" "$install_dir/package.json"
+cp "$install_dir/build/package-lock.json" "$install_dir/package-lock.json"
+cp -r "$install_dir/build/libraries/" "$install_dir/libraries/"
+cp -r "$install_dir/build/services/" "$install_dir/services/"
+cp -r "$install_dir/build/patches/" "$install_dir/patches/"
 cp -r "$install_dir/build/server-ce/config" "$install_dir/config/"
 
 
-cp "$install_dir/build_ldap/ldap-overleaf-sl/sharelatex/AuthenticationManager.js" "$install_dir/live/services/web/app/src/Features/Authentication/AuthenticationManager.js"
-cp "$install_dir/build_ldap/ldap-overleaf-sl/sharelatex/ContactController.js" "$install_dir/live/services/web/app/src/Features/Contacts/ContactController.js"
-#sed -iE '/type=.*email.*/d' $install_dir/live/services/web/app/views/user/login.pug
-#sed -iE "s/email@example.com/${login_text:-user}/g" $install_dir/live/services/web/app/views/user/login.pug
-#sed -iE '/email@example.com/{n;N;N;d}' $install_dir/live/services/web/app/views/user/login.pug
-sed -iE "s%-synctex=1\",%-synctex=1\", \"-shell-escape\",%g" $install_dir/live/services/clsi/app/js/LatexRunner.js
-sed -iE "s%'-synctex=1',%'-synctex=1', '-shell-escape',%g" $install_dir/live/services/clsi/app/js/LatexRunner.js
-cp "$install_dir/build_ldap/ldap-overleaf-sl/sharelatex/settings.pug" "$install_dir/live/services/web/app/views/user/settings.pug"
-cp "$install_dir/build_ldap/ldap-overleaf-sl/sharelatex/navbar.pug" "$install_dir/live/services/web/app/views/layout/navbar.pug"
-cp "$install_dir/build_ldap/ldap-overleaf-sl/sharelatex/admin-sysadmin.pug" "$install_dir/live/services/web/app/views/admin/index.pug"
-ynh_secure_remove --file="$install_dir/live/services/web/app/views/project/editor/review-panel.pug"
-touch "$install_dir/live/services/web/app/views/project/editor/review-panel.pug"
+cp "$install_dir/build_ldap/ldap-overleaf-sl/sharelatex/AuthenticationManager.js" "$install_dir/services/web/app/src/Features/Authentication/AuthenticationManager.js"
+cp "$install_dir/build_ldap/ldap-overleaf-sl/sharelatex/ContactController.js" "$install_dir/services/web/app/src/Features/Contacts/ContactController.js"
+#sed -iE '/type=.*email.*/d' $install_dir/services/web/app/views/user/login.pug
+#sed -iE "s/email@example.com/${login_text:-user}/g" $install_dir/services/web/app/views/user/login.pug
+#sed -iE '/email@example.com/{n;N;N;d}' $install_dir/services/web/app/views/user/login.pug
+sed -iE "s%-synctex=1\",%-synctex=1\", \"-shell-escape\",%g" $install_dir/services/clsi/app/js/LatexRunner.js
+sed -iE "s%'-synctex=1',%'-synctex=1', '-shell-escape',%g" $install_dir/services/clsi/app/js/LatexRunner.js
+cp "$install_dir/build_ldap/ldap-overleaf-sl/sharelatex/settings.pug" "$install_dir/services/web/app/views/user/settings.pug"
+cp "$install_dir/build_ldap/ldap-overleaf-sl/sharelatex/navbar.pug" "$install_dir/services/web/app/views/layout/navbar.pug"
+cp "$install_dir/build_ldap/ldap-overleaf-sl/sharelatex/admin-sysadmin.pug" "$install_dir/services/web/app/views/admin/index.pug"
+ynh_secure_remove --file="$install_dir/services/web/app/views/project/editor/review-panel.pug"
+touch "$install_dir/services/web/app/views/project/editor/review-panel.pug"
 
 ynh_secure_remove --file="$install_dir/build"
 ynh_secure_remove --file="$install_dir/build_ldap"
 
-pushd "$install_dir/live"
+pushd "$install_dir"
 	ynh_use_nodejs
 	ynh_exec_warn_less $ynh_npm install sandboxed-module@latest
 	ynh_exec_warn_less $ynh_npm install -g npm@7.24.2
 	npm ci
 popd
 
-pushd "$install_dir/live/services/web"
+pushd "$install_dir/services/web"
 	ynh_exec_warn_less npm run webpack:production
 	ynh_exec_warn_less npm install -g npm
 	ynh_exec_warn_less npm install ldap-escape
@@ -137,12 +136,12 @@ pushd "$install_dir/live/services/web"
 	ynh_exec_warn_less npm install ldapts
 	ynh_exec_warn_less npm install ldap-escape
 	ynh_exec_warn_less npm cache clean --force
-ynh_secure_remove --file="$install_dir/live/services/web/node_modules/.cache"
+ynh_secure_remove --file="$install_dir/services/web/node_modules/.cache"
 popd
 
-chmod 750 "$install_dir/live"
-chmod -R o-rwx "$install_dir/live"
-chown -R $app:www-data "$install_dir/live"
+chmod 750 "$install_dir"
+chmod -R o-rwx "$install_dir"
+chown -R $app:www-data "$install_dir"
 
 mkdir -p "$install_dir/tmp/uploads"
 
