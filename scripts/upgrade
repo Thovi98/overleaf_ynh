@@ -151,15 +151,14 @@ then
 		ynh_secure_remove --file="$install_dir/services/web/node_modules/.cache"
 	popd
 
-	chmod 750 "$install_dir"
-	chmod -R o-rwx "$install_dir"
-	chown -R $app:www-data "$install_dir"
-
 	mkdir -p "$install_dir/tmp/uploads"
 
+	chmod 750 "$install_dir"
+	chmod -R o-rwx "$install_dir"
 	chmod 750 "$install_dir/tmp"
 	chmod -R o-rwx "$install_dir/tmp"
-	chown -R $app:www-data "$install_dir/tmp"
+
+	chown -R $app:www-data "$install_dir"
 fi
 
 #=================================================
